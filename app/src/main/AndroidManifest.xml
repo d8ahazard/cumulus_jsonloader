@@ -32,6 +32,10 @@
         </activity>
         <activity
             android:name=".WebLinkPlugin">
+            <intent-filter>
+                <action android:name="com.felkertech.cumulustv.ADD_CHANNEL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".DetailsActivity" />

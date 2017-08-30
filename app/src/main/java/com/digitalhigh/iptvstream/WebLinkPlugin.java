@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.felkertech.cumulustv.plugins.CumulusChannel;
 import com.felkertech.cumulustv.plugins.CumulusTvPlugin;
-import com.felkertech.cumulustv.plugins.JsonContainer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,9 +37,7 @@ public class WebLinkPlugin extends CumulusTvPlugin {
         Log.d(TAG, "ImportJSON called.");
         try {
             JSONinput = new JsonTask().execute("http://FOO/IPTV/app.php?JSON=true").get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         JSONObject json;
@@ -49,8 +46,8 @@ public class WebLinkPlugin extends CumulusTvPlugin {
             JSONArray channels = json.getJSONArray("channels");
             for (int i = 0; i < channels.length(); i++) {
                 JSONObject value = channels.getJSONObject(i);
-                Log.d(TAG,"Channel: " + value.getString("name"));
-                JsonContainer jsonChannel;
+                Log.d(TAG, "Channel: " + value.getString("name"));
+                CumulusChannel c = new CumulusChannel.Builder()
                         .setName(value.getString("name"))
                         .setNumber(value.getString("number"))
                         .setMediaUrl(value.getString("url"))
@@ -60,6 +57,7 @@ public class WebLinkPlugin extends CumulusTvPlugin {
                         .setGenres(value.getString("genres"))
                         .build();
                 finish();
+                saveChannel(c);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -113,6 +111,7 @@ public class WebLinkPlugin extends CumulusTvPlugin {
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(String JSONout) {
             super.onPostExecute(JSONout);
