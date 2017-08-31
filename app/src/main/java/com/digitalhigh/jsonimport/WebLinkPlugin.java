@@ -1,13 +1,18 @@
-package com.digitalhigh.iptvstream;
+package com.digitalhigh.jsonimport;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.felkertech.cumulustv.plugins.CumulusChannel;
@@ -23,6 +28,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 
@@ -30,6 +36,7 @@ public class WebLinkPlugin extends CumulusTvPlugin {
     private static final String TAG = WebLinkPlugin.class.getSimpleName();
     private String JSONinput;
     private ProgressBar pb;
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +48,44 @@ public class WebLinkPlugin extends CumulusTvPlugin {
         pb = (ProgressBar) findViewById(R.id.progressBar2);
         pb.setVisibility(View.INVISIBLE);
         Button inputButton = (Button) findViewById(R.id.button2);
+        final EditText et = (EditText) findViewById(R.id.editText);
+        settings = getSharedPreferences("app", 0);
+        String lastUrl = settings.getString("url","");
+        if (!Objects.equals(lastUrl, "")) et.setText(lastUrl);
+        et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() != 0) {
+
+                    SharedPreferences.Editor editor=settings.edit();
+                    editor.putString("url", s.toString());
+                    editor.apply();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         inputButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG,"It's the button, dude.");
-                EditText et = (EditText) findViewById(R.id.editText);
                 String inUrl = et.getText().toString().trim();
                 Log.d(TAG,"URL "+ inUrl);
                 if (URLUtil.isValidUrl(inUrl)) {
                     pb.setVisibility(View.VISIBLE);
                     importJson(inUrl);
                 } else {
-                    Toast.makeText(getApplicationContext(),"Invalid URL provided.",Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(),"Invalid URL provided.",Toast.LENGTH_LONG).show();
+
+
                 }
             }
         });

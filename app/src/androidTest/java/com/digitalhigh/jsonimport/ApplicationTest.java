@@ -1,4 +1,4 @@
-package com.digitalhigh.iptvstream;
+package com.digitalhigh.jsonimport;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

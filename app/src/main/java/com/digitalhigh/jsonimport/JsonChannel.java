@@ -1,4 +1,4 @@
-package com.digitalhigh.iptvstream;
+package com.digitalhigh.jsonimport;
 
 import android.content.ComponentName;
 import android.support.annotation.NonNull;
