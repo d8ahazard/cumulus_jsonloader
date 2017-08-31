@@ -37,4 +37,6 @@
     <string name="error_fragment_message">An error occurred</string>
     <string name="dismiss_error">Dismiss</string>
     <string name="oops">Oops</string>
+    <string name="enter_the_json_url">textPrompt</string>
+    <string name="populate">textPopulate</string>
 </resources>
